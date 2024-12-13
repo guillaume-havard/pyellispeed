@@ -1,0 +1,39 @@
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "pyellispeed"
+authors = [
+  { name="Guillaume Havard", email="guill.havard@gmail.com" },
+]
+description = "Ellipsoids drawing and analysis in 3D volumetric images."
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+]
+dynamic = ["version"]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest <= 8.3.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/guillaume-havard/speedestpy"
+Issues = "https://github.com/guillaume-havard/speedestpy/issues"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "src_python"
