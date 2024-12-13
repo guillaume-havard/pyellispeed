@@ -15,9 +15,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
+        uses: PyO3/maturin-action@v1
+        with:
+          command: develop
+      - name: Install pytest
         run: |
-          pip install maturin
-          maturin develop
           pip install pytest
       - name: Launching tests with pytest
         run: |
