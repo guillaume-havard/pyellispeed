@@ -1,5 +1,5 @@
 import numpy as np
-from pyellipsoid.geometry import build_rotation_matrix
+from pyellispeed.geometry import build_rotation_matrix
 
 
 def make_ellipsoid_image(shape, center, radii, angle):

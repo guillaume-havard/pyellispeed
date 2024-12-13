@@ -1,7 +1,7 @@
 import json
 import numpy as np
 from collections import namedtuple, defaultdict
-from pyellipsoid import geometry
+from pyellispeed import geometry
 
 
 Ellipsoid = namedtuple('Ellipsoid', ['center', 'radii', 'axes'])
