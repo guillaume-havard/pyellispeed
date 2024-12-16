@@ -104,6 +104,12 @@ def find_relative_axes_rotation(source_axes, target_axes, validate=True):
 
     Returns:
         [numpy.array] -- Euler rotation matrix, Euler angles
+
+    Todo:
+        Add validation for axes input.
+            It must be a shape of (3, 3) 
+            and some cases are not accepted.
+        angles = rotation_matrix_to_angles(R) shoudl be in the ``if validate``
     """
 
     # Convert to numpy
@@ -149,4 +155,4 @@ def find_vectors_mapping(source, target):
     Returns:
         [array] -- indices mapping source vectors to target vectors
     """
-    return [np.argmax([abs(scalar_projection(s, t)) for t in target]) for s in source]
+    return [np.argmax(   [abs(scalar_projection(s, t)) for t in target]   ) for s in source]
