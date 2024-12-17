@@ -1,8 +1,12 @@
 import numpy as np
 from pyellispeed import geometry
+from pyellispeed import geometry_rs
 
 def test_bench_build_rotation_matrix(benchmark):
     benchmark(geometry.build_rotation_matrix, 10.0, 20.0, 30.0, True)
+
+def test_bench_build_rotation_matrix_rs(benchmark):
+    benchmark(geometry_rs.build_rotation_matrix, 10.0, 20.0, 30.0, True)
 
 def test_bench_rotation_matrix_to_angle(benchmark):    
     rotation_matrix = np.array([[0, 0, 1], [0, 0, 2], [1, 2, 3]])

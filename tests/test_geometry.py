@@ -1,5 +1,6 @@
 import numpy as np
 from pyellispeed import geometry
+from pyellispeed import geometry_rs
 
 def test_relative_vector_rotation():
     angle_xyz = np.deg2rad([0, 0, 45])
@@ -7,7 +8,7 @@ def test_relative_vector_rotation():
     exp_vec = [-0.70710678, 0.70710678, 0.]
 
     # Build rotation matrix and transform the src_vector
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     res_vec = np.dot(rotm, src_vec)
 
     # Validate
@@ -30,7 +31,7 @@ def test_sequence():
     ])
     vectors = [np.array([0, 0, 1])]
     for entry in angles:
-        rotm = geometry.build_rotation_matrix(*entry)
+        rotm = geometry_rs.build_rotation_matrix(*entry)
         vectors.append(np.dot(rotm, vectors[-1].T))
 
     for src_vec, dst_vec in zip(vectors, vectors[1:]):
@@ -45,7 +46,7 @@ def test_relative_axes_rotation():
     rot_angles = np.deg2rad([60, 30, 45])  # Rotate around Z-axis by 45 deg
 
     # Build rotation matrix and rotate the axes
-    rotm = geometry.build_rotation_matrix(*rot_angles)
+    rotm = geometry_rs.build_rotation_matrix(*rot_angles)
     rotated_axes = np.dot(rotm, original_axes.T).T
 
     # Find relative rotation
@@ -66,11 +67,11 @@ def test_scalar_projection():
 
     # Build rotation matrices and transform the source vector
     angle_xyz = np.deg2rad([0, 0, 30])
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     source_30 = np.dot(rotm, source)
 
     angle_xyz = np.deg2rad([0, 0, 60])
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     source_60 = np.dot(rotm, source)
 
     proj_30 = abs(geometry.scalar_projection(source_30, target))
@@ -81,7 +82,7 @@ def test_scalar_projection():
 def validate_vectors_mapping(angles, radii, expected):
     target = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     # Rotate
-    rotm = geometry.build_rotation_matrix(*angles)
+    rotm = geometry_rs.build_rotation_matrix(*angles)
     source = [np.dot(rotm, v) for v in target]
     # Sort vectors order to mimic SVD
     source = [v for _, v in sorted(zip(radii, source), reverse=True)]
