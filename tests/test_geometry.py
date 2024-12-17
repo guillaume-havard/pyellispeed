@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from pyellispeed import geometry
 
 def test_relative_vector_rotation():

@@ -24,4 +24,4 @@ jobs:
       - name: Launching tests with pytest
         run: |
           source .venv/bin/activate
-          pytest .
+          pytest tests/

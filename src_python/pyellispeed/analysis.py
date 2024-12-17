@@ -130,7 +130,7 @@ def analyze_sequence(ellipsoids, validate=True):
             stats['rotation'].append(None)
             continue
 
-        R = geometry.find_relative_axes_rotation(prev_ell.axes, ell.axes)
+        R = geometry.find_relative_axes_rotation(prev_ell.axes, ell.axes, validate)
         angles = geometry.rotation_matrix_to_angles(R)
 
         # Convert angles to a proper range

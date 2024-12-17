@@ -88,7 +88,15 @@ maturin develop
 
 # If you want to test
 pip install pytest
-pytest .
+pytest tests
+
+
+# If you want to benchmark
+pip install pytest-benchmark
+pytest --benchmark-only test_benchmark
+# It is recommended to compile in release mode with 
+maturin develop --release
+
 ```
 
 
