@@ -118,9 +118,9 @@ def find_relative_axes_rotation(source_axes, target_axes, validate=True):
 
     # Find rotation between coordinate systems formed by the axes
     R = np.dot(target_axes.T, np.linalg.inv(source_axes.T))
-    angles = rotation_matrix_to_angles(R)
 
     if validate:
+        angles = rotation_matrix_to_angles(R)
         R_rebuild = build_rotation_matrix(*angles)
         axes = np.dot(R_rebuild, source_axes.T).T
 
