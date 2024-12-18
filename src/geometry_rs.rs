@@ -40,6 +40,7 @@ pub fn build_rotation_matrix<'py>(ax: f64, ay: f64, az: f64, inverse: Option<boo
     rotation
 }
 
+/// Internal function doc.
 pub fn rotation_matrix_to_angles(rotation_matrix: ArrayView2<f64>) -> Array1<f64> {
     let eps = 1e-6; // Small threshold for floating-point comparisons
 
@@ -71,7 +72,6 @@ pub fn rotation_matrix_to_angles(rotation_matrix: ArrayView2<f64>) -> Array1<f64
     }
 }
 
-
 #[pymodule]
 pub fn geometry_rs<'py>(m: &Bound<'py, PyModule>) -> PyResult<()> {
     #[pyfn(m)]
@@ -86,11 +86,12 @@ pub fn geometry_rs<'py>(m: &Bound<'py, PyModule>) -> PyResult<()> {
         build_rotation_matrix(ax, ay, az, inverse).into_pyarray(py)
     }
 
+    /// Input array must be a float array.
     #[pyfn(m)]
     #[pyo3(name = "rotation_matrix_to_angles")]
     pub fn rotation_matrix_to_angles_rs<'py>(
         py: Python<'py>,
-        rotation_matrix: PyReadonlyArray2<'py, f64>
+        rotation_matrix: PyReadonlyArray2<'py, f64>,
     ) -> Bound<'py, PyArray1<f64>> {
         rotation_matrix_to_angles(rotation_matrix.as_array()).into_pyarray(py)
     }
