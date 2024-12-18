@@ -1,5 +1,6 @@
 import numpy as np
 from pyellispeed import drawing
+from pyellispeed import drawing_rs
 
 def test_make_ellipsoid_image():
     shape = (100, 100, 100)# Z, Y, X
@@ -7,7 +8,7 @@ def test_make_ellipsoid_image():
     radii_xyz = (5, 10, 30)
     angles_xyz = (0, 0, 0) # X, Y, Z
 
-    image = drawing.make_ellipsoid_image(shape, center_xyz, radii_xyz, angles_xyz)
+    image = drawing_rs.make_ellipsoid_image(shape, center_xyz, radii_xyz, angles_xyz)
     assert image.shape == shape
     assert np.count_nonzero(image) > 0
 
@@ -31,8 +32,7 @@ def test_make_ellipsoid_image_rotation():
     radii_xyz = (5, 10, 30)
     angles_xyz = (0, np.pi/2, 0) # X, Y, Z
 
-    image = drawing.make_ellipsoid_image(shape, center_xyz, radii_xyz, angles_xyz)
-    x, y, z = np.where(image>0)
+    image = drawing_rs.make_ellipsoid_image(shape, center_xyz, radii_xyz, angles_xyz)
     assert image.shape == shape
     assert np.count_nonzero(image) > 0
 
