@@ -1,6 +1,47 @@
 import numpy as np
 from pyellispeed import geometry
 from pyellispeed import geometry_rs
+import json
+
+def test_generate_rotation_matrix():
+
+    with open("tests/data/rotation_matrix.json", "r") as f:
+        loaded_json = json.load(f)
+
+    loaded_data = {eval(key): np.array(value) for key, value in loaded_json.items()}
+
+    for angles, expected_value in loaded_data.items():
+
+        angles_rad = np.deg2rad(angles)
+        matrix = geometry_rs.build_rotation_matrix(*angles_rad)
+
+        assert (
+            np.allclose(matrix, expected_value, rtol=1e-5),
+            f"Rotation matrix:\n"
+            f"{matrix}\n"
+            f"does not match for {angles} expected result:\n"
+            f"{expected_value}"
+        )
+
+def test_get_angles_from_rotation_matrix():
+    with open("tests/data/rotation_matrix.json", "r") as f:
+        loaded_json = json.load(f)
+
+    loaded_data = {eval(key): np.array(value) for key, value in loaded_json.items()}
+
+    for expected_angles, matrix in loaded_data.items():
+
+        expected_angles_rad = np.deg2rad(expected_angles)
+        angles = geometry_rs.rotation_matrix_to_angles(matrix)
+        angles_deg = np.rad2deg(angles)
+
+        assert (
+            np.allclose(angles, expected_angles_rad, rtol=1e-5),
+            f"Angles:\n"
+            f"{angles_deg}\n"
+            f"does not match for {matrix} expected result:\n"
+            f"{expected_angles}"
+        )
 
 def test_relative_vector_rotation():
     angle_xyz = np.deg2rad([0, 0, 45])
@@ -19,7 +60,7 @@ def test_relative_vector_rotation():
     found_rotm = geometry.find_relative_vector_rotation(src_vec, exp_vec)
 
     # Extract Euler angles
-    found_angles = geometry.rotation_matrix_to_angles(found_rotm)
+    found_angles = geometry_rs.rotation_matrix_to_angles(found_rotm)
 
     # Validate
     err = np.linalg.norm(found_angles - angle_xyz)
