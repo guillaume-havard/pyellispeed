@@ -1,5 +1,47 @@
 import numpy as np
 from pyellispeed import geometry
+from pyellispeed import geometry_rs
+import json
+
+def test_generate_rotation_matrix():
+
+    with open("tests/data/rotation_matrix.json", "r") as f:
+        loaded_json = json.load(f)
+
+    loaded_data = {eval(key): np.array(value) for key, value in loaded_json.items()}
+
+    for angles, expected_value in loaded_data.items():
+
+        angles_rad = np.deg2rad(angles)
+        matrix = geometry_rs.build_rotation_matrix(*angles_rad)
+
+        assert (
+            np.allclose(matrix, expected_value, rtol=1e-5),
+            f"Rotation matrix:\n"
+            f"{matrix}\n"
+            f"does not match for {angles} expected result:\n"
+            f"{expected_value}"
+        )
+
+def test_get_angles_from_rotation_matrix():
+    with open("tests/data/rotation_matrix.json", "r") as f:
+        loaded_json = json.load(f)
+
+    loaded_data = {eval(key): np.array(value) for key, value in loaded_json.items()}
+
+    for expected_angles, matrix in loaded_data.items():
+
+        expected_angles_rad = np.deg2rad(expected_angles)
+        angles = geometry_rs.rotation_matrix_to_angles(matrix)
+        angles_deg = np.rad2deg(angles)
+
+        assert (
+            np.allclose(angles, expected_angles_rad, rtol=1e-5),
+            f"Angles:\n"
+            f"{angles_deg}\n"
+            f"does not match for {matrix} expected result:\n"
+            f"{expected_angles}"
+        )
 
 def test_relative_vector_rotation():
     angle_xyz = np.deg2rad([0, 0, 45])
@@ -7,7 +49,7 @@ def test_relative_vector_rotation():
     exp_vec = [-0.70710678, 0.70710678, 0.]
 
     # Build rotation matrix and transform the src_vector
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     res_vec = np.dot(rotm, src_vec)
 
     # Validate
@@ -18,7 +60,7 @@ def test_relative_vector_rotation():
     found_rotm = geometry.find_relative_vector_rotation(src_vec, exp_vec)
 
     # Extract Euler angles
-    found_angles = geometry.rotation_matrix_to_angles(found_rotm)
+    found_angles = geometry_rs.rotation_matrix_to_angles(found_rotm)
 
     # Validate
     err = np.linalg.norm(found_angles - angle_xyz)
@@ -30,7 +72,7 @@ def test_sequence():
     ])
     vectors = [np.array([0, 0, 1])]
     for entry in angles:
-        rotm = geometry.build_rotation_matrix(*entry)
+        rotm = geometry_rs.build_rotation_matrix(*entry)
         vectors.append(np.dot(rotm, vectors[-1].T))
 
     for src_vec, dst_vec in zip(vectors, vectors[1:]):
@@ -45,7 +87,7 @@ def test_relative_axes_rotation():
     rot_angles = np.deg2rad([60, 30, 45])  # Rotate around Z-axis by 45 deg
 
     # Build rotation matrix and rotate the axes
-    rotm = geometry.build_rotation_matrix(*rot_angles)
+    rotm = geometry_rs.build_rotation_matrix(*rot_angles)
     rotated_axes = np.dot(rotm, original_axes.T).T
 
     # Find relative rotation
@@ -66,11 +108,11 @@ def test_scalar_projection():
 
     # Build rotation matrices and transform the source vector
     angle_xyz = np.deg2rad([0, 0, 30])
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     source_30 = np.dot(rotm, source)
 
     angle_xyz = np.deg2rad([0, 0, 60])
-    rotm = geometry.build_rotation_matrix(*angle_xyz)
+    rotm = geometry_rs.build_rotation_matrix(*angle_xyz)
     source_60 = np.dot(rotm, source)
 
     proj_30 = abs(geometry.scalar_projection(source_30, target))
@@ -81,7 +123,7 @@ def test_scalar_projection():
 def validate_vectors_mapping(angles, radii, expected):
     target = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     # Rotate
-    rotm = geometry.build_rotation_matrix(*angles)
+    rotm = geometry_rs.build_rotation_matrix(*angles)
     source = [np.dot(rotm, v) for v in target]
     # Sort vectors order to mimic SVD
     source = [v for _, v in sorted(zip(radii, source), reverse=True)]

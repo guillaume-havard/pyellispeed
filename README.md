@@ -1,7 +1,7 @@
 # PyEllispeed
 
 **PyEllispeed** is the package for drawing and analysis of ellipsoids in 3D volumetric images (3D arrays).
-Forked from [PyEllipsoid](https://github.com/ashkarin/pyellipsoid) for more speed 
+Forked from [PyEllipsoid](https://github.com/ashkarin/pyellipsoid). 
 
 ## How to use
 
@@ -98,5 +98,10 @@ pytest --benchmark-only test_benchmark
 maturin develop --release
 
 ```
+
+## Next steps
+
+* Add stub file for type annotation and documentation
+* Use GPU with python libraries (cupy...)
 
 

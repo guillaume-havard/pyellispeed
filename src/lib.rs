@@ -1,14 +1,17 @@
 use pyo3::prelude::*;
 
-/// Formats the sum of two numbers as string.
-#[pyfunction]
-fn placeholder(a: usize, b: usize) -> PyResult<String> {
-    Ok((a + b).to_string())
-}
+mod drawing_rs;
+mod geometry_rs;
 
-/// A Python module implemented in Rust.
 #[pymodule]
-fn pyellispeed(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(placeholder, m)?)?;
+fn pyellispeed(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    let module = PyModule::new(py, "geometry_rs")?;
+    geometry_rs::geometry_rs(&module)?;
+    m.add_submodule(&module)?;
+
+    let module = PyModule::new(py, "drawing_rs")?;
+    drawing_rs::drawing_rs(&module)?;
+    m.add_submodule(&module)?;
+
     Ok(())
 }

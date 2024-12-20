@@ -18,3 +18,9 @@ target/
 Cargo.lock
 **/*.rs.bk
 *.pdb
+
+# for profilers
+*.svg
+*.data
+*.data.old
+profile.json
