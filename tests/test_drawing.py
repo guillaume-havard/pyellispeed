@@ -1,5 +1,4 @@
 import numpy as np
-from pyellispeed import drawing
 from pyellispeed import drawing_rs
 
 def test_make_ellipsoid_image():

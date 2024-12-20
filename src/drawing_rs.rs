@@ -42,6 +42,19 @@ pub fn make_ellipsoid_image<'py>(
 
 #[pymodule]
 pub fn drawing_rs<'py>(m: &Bound<'py, PyModule>) -> PyResult<()> {
+    /// Generate a 3D binary image containing a 3D ellipsoid.
+    ///
+    /// # Arguments
+    ///
+    /// * `py` - The Python interpreter.
+    /// * `shape` - The shape of the image [z, y, x], must be Integer.
+    /// * `center` - The center of the ellipsoid [x, y, z], must be float.
+    /// * `radii` - The radii of the ellipsoid [x, y, z], must be float.
+    /// * `angles` - Rotation angles [x, y, z], must be float.
+    ///
+    /// # Returns
+    ///
+    /// A 3D binary image containing a 3D ellipsoid.
     #[pyfn(m)]
     #[pyo3(name = "make_ellipsoid_image")]
     pub fn make_ellipsoid_image_rs<'py>(
@@ -54,40 +67,4 @@ pub fn drawing_rs<'py>(m: &Bound<'py, PyModule>) -> PyResult<()> {
         make_ellipsoid_image(py, shape, center, radii, angles)
     }
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_make_ellipsoid_image() {
-        let shape = [100, 100, 100];
-        let center_xyz = [50., 50., 50.];
-        let radii_xyz = [5., 10., 30.];
-        let angles_xyz = [0., 0., 0.];
-
-        let image = make_ellipsoid_image(Py, shape, center_xyz, radii_xyz, angles_xyz);
-        unsafe {
-            let image = image.as_array();
-        
-            assert_eq!(image.shape(), shape);
-            let nonzero_count = image.iter().filter(|&&x| x).count();
-            assert_ne!(nonzero_count, 0);
-
-            assert_eq!(image[[20, 50, 50]], true);
-            assert_eq!(image[[80, 50, 50]], true);
-            assert_eq!(image[[50, 40, 50]], true);
-            assert_eq!(image[[50, 60, 50]], true);
-            assert_eq!(image[[50, 50, 45]], true);
-            assert_eq!(image[[50, 50, 55]], true);
-
-            //assert_eq!(image[[50, 50, 54]] , false);
-            assert_eq!(image[[50, 50, 56]], false);
-            assert_eq!(image[[50, 49, 55]], false);
-            assert_eq!(image[[50, 51, 55]], false);
-            assert_eq!(image[[49, 50, 55]], false);
-            assert_eq!(image[[51, 50, 55]], false);
-        }
-    }
 }
